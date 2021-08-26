@@ -1,0 +1,32 @@
+\documentclass[class=Report, crop=false]{standalone}
+
+\begin{document}
+\section{Some Final Notes...}
+
+Finally, it is worth pointing out that your home folder (i.e. \mintinline{bash}{echo $HOME}) only has 10GB of storage space, which will seriously limit the size of the jobs you'll be able to run. SLURM will just kill your task if you run out of space in your home folder. Instead, you should probably run your jobs from the group directory:
+
+\begin{minted}{bash}
+    /hpc/group/dolbowlab/<net_id>
+\end{minted}
+
+\noindent For convenience, you may want to set an environment variable in your \mintinline{bash}{.bashrc} to access this folder quickly:
+
+\begin{minted}{bash}
+  export JDDIR="/hpc/group/dolbowlab/<net_id>"
+\end{minted}
+
+\noindent Then quickly jump to your folder with \mintinline{bash}{cd $JDDIR}.
+
+If you are OK with slower latency, and back up your work often enough, you can also create a directory for yourself in the \mintinline{bash}{/work} folder, which has 450TB of storage\footnote{Temporarily increased to 650TB due to increased remote computing demand during the COVID-19 pandemic}. However, this directory is not backed up, and any files older than 75 days will be purged automatically.
+
+If you use the Raccoon app, its \mintinline{bash}{examples} folder is not tracked by git and is ideal to serve as your work directory. To utilize larger storage space in either the dolbowlab group directory or the DCC work space, create a folder at your desired location and soft link it to your home directory. To do so (using the dolbowlab group directory), first create an \mintinline{bash}{examples} folder:
+\begin{minted}{bash}
+  mkdir /hpc/group/dolbowlab/<net_id>/examples
+\end{minted}
+Then soft link it to your home directory:
+\begin{minted}{bash}
+  ln -s /hpc/group/dolbowlab/<net_id>/examples ~/projects/raccoon/examples
+\end{minted}
+Then you can use the \mintinline{bash}{examples} directory the same way as you can locally, while also enjoying a larger storage space.
+
+\end{document}

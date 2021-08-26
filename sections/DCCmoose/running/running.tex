@@ -1,0 +1,78 @@
+\documentclass[class=Report, crop=false]{standalone}
+
+\begin{document}
+\section{Running}
+
+DCC uses a task scheduling system called SLURM\footnote{\url{https://slurm.schedmd.com/documentation.html}}, which manages job priority and queues for the various researchers using DCC. SLURM is typically quite good at what it does, but often may not provide you with helpful information if your job is terminated prematurely. To gain some confidence that your job will run on DCC, you can create an interactive session on the login node---essentially giving you DCC-grade horsepower in the login node's terminal you have access to. As a shortcut, you can add the following handy-dandy bash function to your \mintinline{bash}{.bashrc}:
+
+\begin{minted}{bash}
+  # interactive testing
+  InteractiveSession () {
+    srun --account=dolbowlab -p dolbowlab --pty -N 1 -n $1 -c $2 --mem $3 --time=5- bash -i
+  }
+\end{minted}
+
+To trial your job on e.g. 1 node, 35 processors, and 200GB RAM (\mintinline{bash}{$1}, \mintinline{bash}{$2}, and \mintinline{bash}{$3} arguments in the function), do the following in your terminal (remember to \mintinline{bash}{source ~/.bashrc} before using the command):
+
+\begin{minted}{bash}
+  InteractiveSession 1 35 200G
+\end{minted}
+
+You may find it useful to keep a bash script in the folder from which you run your jobs on DCC. Here is an example script:
+
+\begin{minted}{bash}
+  #!/bin/bash
+  #SBATCH -N 1
+  #SBATCH --ntasks=35
+  #SBATCH --job-name=aMeaningfulTitle
+  #SBATCH --partition=dolbowlab
+  #SBATCH --mem-per-cpu=10G
+  #SBATCH -o outputFileName
+
+  export SLURM_CPU_BIND=none
+
+  echo "Start: $(date)"
+  echo "cwd: $(pwd)"
+
+  mpirun <path_to_executable> -i <path_to_input_file>
+
+  echo "End: $(date)"
+\end{minted}
+
+\begin{note}{MPI}{mpinote}
+  You will not have to use the syntax \mintinline{bash}{mpirun -n <#cpu> ...}. SLURM will automatically assign CPUs to your job based on the flags such as \mintinline{bash}{--ntasks}.
+\end{note}
+
+\begin{note}{CPU Bind}{cpubindnote}
+  There was a recent issue that caused CPU usage to be compressed to a single CPU. Basically, all the 35 tasks created by line 3 in the script above would be bound to only one CPU. DCC admins Tom Milledge\footnote{\texttt{\href{mailto:tom.milledge@duke.edu}{tom.milledge@duke.edu}}} and Victor Orlikowski\footnote{\texttt{\href{mailto:vjo@duke.edu}{vjo@duke.edu}}} recommended adding \mintinline{bash}{export SLURM_CPU_BIND=none}, as in line 9 above, after the SLURM directives.
+\end{note}
+
+% This is not necessary unless DCC is somehow broken with its user management.
+% \begin{note}{executable}{execnote}
+%   This may also not be necessary, but you can make your bash script executable using \mintinline{bash}{chmod +x <bash_file_name>.sh}
+% \end{note}
+
+When you wish to submit your job to the SLURM queue, simply use the \mintinline{bash}{sbatch} command as follows:
+
+\begin{minted}{bash}
+  sbatch <bash_script_name>
+\end{minted}
+
+\noindent and just wait for it to finish...
+
+Finally, you can check the status of your job with the \mintinline{bash}{squeue} command, which has many formatting options. You can get a lot of useful information with the following:
+
+\begin{minted}{bash}
+  squeue -u <netid> -o "%.18i %.9P %.8j %.8u %.8T %.10M %.12l %.6D %.18R %.5C %.10c"
+\end{minted}
+
+\begin{note}{following the output}
+  You can use \mintinline{bash}{tail} to continuously follow the output, e.g.
+  \mintinline{bash}{tail -f <outputFileName>}.
+\end{note}
+
+\begin{note}{navigate output}{outnote}
+  Your output file may be huge. If you use VIM to view this file, you can use \mintinline{text}{shift + G} to take you to the end of the file.
+\end{note}
+
+\end{document}

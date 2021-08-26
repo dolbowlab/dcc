@@ -1,0 +1,65 @@
+\documentclass[class=Report, crop=false]{standalone}
+
+\begin{document}
+\section{Complete Instructions}
+\label{sec:complinstr}
+
+\begin{minted}{bash}
+  module load cmake/3.10.2
+  module load Python/3.6.4
+  module load GCC/7.4.0
+  module load MPICH/3.2.1
+
+  export STACK_SRC=`mktemp -d /tmp/stack_temp.XXXXXX`
+  export PACKAGES_DIR=$HOME/moose-compilers
+
+  cd $STACK_SRC
+  curl -L -O http://ftp.mcs.anl.gov/pub/petsc/release-snapshots/petsc-3.11.4.tar.gz
+  tar -xf petsc-3.11.4.tar.gz -C .
+
+  cd $STACK_SRC/petsc-3.11.4
+
+  ./configure \
+  --prefix=$PACKAGES_DIR/petsc-3.11.4 \
+  --with-debugging=0 \
+  --with-ssl=0 \
+  --with-pic=1 \
+  --with-openmp=1 \
+  --with-mpi=1 \
+  --with-shared-libraries=1 \
+  --with-cxx-dialect=C++11 \
+  --with-fortran-bindings=0 \
+  --with-sowing=0 \
+  --download-hypre=1 \
+  --download-fblaslapack=1 \
+  --download-metis=1 \
+  --download-ptscotch=1 \
+  --download-parmetis=1 \
+  --download-superlu_dist=1 \
+  --download-scalapack=1 \
+  --download-mumps=1 \
+  --download-slepc=1 \
+  PETSC_DIR=`pwd` PETSC_ARCH=linux-opt
+
+  make PETSC_DIR=$STACK_SRC/petsc-3.11.4 PETSC_ARCH=linux-opt all
+  make PETSC_DIR=$STACK_SRC/petsc-3.11.4 PETSC_ARCH=linux-opt install
+  make PETSC_DIR=$PACKAGES_DIR/petsc-3.11.4 PETSC_ARCH="" test
+
+  if [ -d "$STACK_SRC" ]; then rm -rf "$STACK_SRC"; fi
+
+  mkdir ~/projects
+  cd ~/projects
+  git clone https://github.com/hugary1995/raccoon.git
+  cd raccoon
+  git checkout master
+  git submodule update --init
+
+  cd moose/scripts
+  METHOD=opt ./update_and_rebuild_libmesh.sh --with-boost
+
+  cd ../..
+  make -j N
+  ./run_test -j N
+\end{minted}
+
+\end{document}

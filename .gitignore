@@ -1,0 +1,9 @@
+*.bcf
+*.fdb_latexmk
+*.fls
+*.pyg
+*.run.xml
+*.sta
+*.thm
+*.synctex.gz
+build/

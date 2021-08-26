@@ -1,0 +1,41 @@
+\documentclass[onehalfspace]{Report}
+
+\title{MOOSE Installation Instructions for \\\vspace{0.2em}DCC}				% Title
+\date{\today}				% Date
+\newcommand{\theauthor}{Casper Versteeg, Gary Hu, Roozbeh Rezakhani}
+\newcommand{\versionNumber}{1.0.2} % version number
+\newcommand{\institute}{ Duke University } % Institute
+\newcommand{\course}{\versionNumber}
+
+% \addbibresource{./bibliography/References.bib}
+
+\begin{document}
+\begin{singlespace}
+  \input{sections/titlepage}
+
+  \tableofcontents
+\end{singlespace}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\input{sections/revisions}
+
+\pagebreak
+\input{sections/introduction/introduction}
+\input{sections/DCCmoose/install/install}
+\input{sections/DCCmoose/running/running}
+\input{sections/DCCmoose/finalnotes/finalnotes}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\pagebreak
+\section*{Appendices}
+\addcontentsline{toc}{section}{Appendices}
+
+\begin{appendices}
+
+  \input{sections/appendix/horsepower}
+  \input{sections/appendix/complinstr}
+
+\end{appendices}
+
+\end{document}

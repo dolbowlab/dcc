@@ -1,0 +1,29 @@
+\documentclass[class=Report, crop=false]{standalone}
+
+\begin{document}
+\section{Horsepower}
+
+If you are curious, you can find out how much horsepower we have in our node with \mintinline{bash}{scontrol show node dcc-dolbowlab-01}, which will print something like:
+
+\begin{minted}{bash}
+  NodeName=dcc-dolbowlab-01 Arch=x86_64 CoresPerSocket=1
+    CPUAlloc=35 CPUTot=70 CPULoad=35.34
+    AvailableFeatures=(null)
+    ActiveFeatures=(null)
+    Gres=mathematica:8
+    NodeAddr=dcc-dolbowlab-01 NodeHostName=dcc-dolbowlab-01 Version=19.05.4
+    OS=Linux 3.10.0-1062.9.1.el7.x86_64 #1 SMP Mon Dec 2 08:31:54 EST 2019
+    RealMemory=741580 AllocMem=204800 FreeMem=625894 Sockets=70 Boards=1
+    State=MIXED ThreadsPerCore=1 TmpDisk=25587 Weight=1 Owner=N/A MCS_label=N/A
+    Partitions=dolbowlab
+    BootTime=2019-12-19T11:26:28 SlurmdStartTime=2019-12-19T11:24:08
+    CfgTRES=cpu=70,mem=741580M,billing=70
+    AllocTRES=cpu=35,mem=200G
+    CapWatts=n/a
+    CurrentWatts=0 AveWatts=0
+    ExtSensorsJoules=n/s ExtSensorsWatts=0 ExtSensorsTemp=n/s
+\end{minted}
+
+\noindent This essentially tells you the \mintinline{bash}{dcc-dolbowlab-01} node has 70 CPUs in one node, with a total of 700GB of memory. 
+
+\end{document}

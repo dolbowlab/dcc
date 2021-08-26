@@ -1,0 +1,216 @@
+\ProvidesPackage{General}[2019/07/21, v1.0]
+
+%%%%% Packages to include %%%%%
+% typesetting
+\RequirePackage[utf8]{inputenc}   % encoder parsing
+\RequirePackage{calc}             % arithmetic operations to dimensioning
+\RequirePackage{microtype}        % improves typesetting
+\RequirePackage{setspace}         % gives more line-spacing environments
+\RequirePackage[symbol*]{footmisc}% different footnote labeling
+\RequirePackage[titletoc]{appendix}% adds appendix to table of contents
+% \RequirePackage[hyphens]{url}     % formatting urls
+\RequirePackage{hyperref}
+\RequirePackage{multicol}         % multiple columns in text
+\RequirePackage{multirow}         % text spans multiple rows
+\RequirePackage{pdflscape}           % allows for landscape pages
+\RequirePackage{lipsum}           % lorem ipsum
+\RequirePackage{tabu}             % better tables
+\RequirePackage{longtable,tabularx}% more table environments
+\RequirePackage{array}            % extensions to table and arrays
+\RequirePackage{verbatim}         % print text without formatting
+\RequirePackage{soul}             % for better hyphenation
+\RequirePackage{lettrine}         % dropped capitals across multiple lines
+\RequirePackage{cprotect}         % allows verbatim in argument for other envs
+\RequirePackage[subpreambles=true]{standalone}% adds modularity
+\RequirePackage{subfiles}
+\RequirePackage{fancyhdr}         % much nicer header styling
+\RequirePackage{dirtree}          % directory tree listings
+\RequirePackage[most, theorems]{tcolorbox}  % box shading and titling
+\RequirePackage[edges]{forest}    % For drawing trees
+
+% math
+\RequirePackage{amsmath, amssymb, bm} % AMS math extensions
+\RequirePackage{mathtools}        % more math symbols and environments
+\RequirePackage{nicematrix}       % better matrix environments
+\RequirePackage{framed}           % ntheorem dependency
+% \RequirePackage[amsmath, thmmarks]{ntheorem} % better theorem typesetting
+\RequirePackage[makeroom]{cancel}           % provides calcelto for striking out terms in eq
+\RequirePackage{fontawesome}
+\RequirePackage{textcomp}
+\RequirePackage{algorithm, algpseudocode}
+\RequirePackage{media9}
+\RequirePackage{ragged2e}
+\RequirePackage{overpic}
+\RequirePackage{etoolbox}
+\RequirePackage{multimedia}
+
+
+% graphics
+\RequirePackage{graphicx}         % include graphics in document
+\RequirePackage{float}            % extend float capabilities
+\RequirePackage{wrapfig}
+\RequirePackage{dblfloatfix}      % for multi-column floats
+\RequirePackage[labelfont=bf, tableposition=top]{caption} % set caption props
+\RequirePackage{subcaption}       % subcaptions to subfigures
+\RequirePackage{adjustbox}        % for rescaling, rotating and clipping
+\RequirePackage{color}            % add colors for text and figures
+\RequirePackage{xcolor}           % extension of color package
+\RequirePackage{tikz}             % TikZ
+\RequirePackage{schemabloc}       % TikZ block diagrams
+\RequirePackage{stanli}           % TikZ structural analysis library
+\RequirePackage{tikz-uml}         % TikZ unified modeling language for diagrams
+\RequirePackage{tikz-dimline}     % TikZ dimensioning tools
+\RequirePackage{wasysym}          % for diameter symbol
+\RequirePackage{pgfplots, pgfplotstable}
+
+
+% bibliography
+\RequirePackage[english]{babel}   % biblatex dependency
+\RequirePackage{csquotes, xpatch} % biblatex dependency
+\RequirePackage{ifthen, xstring}  % biblatex dependency
+\RequirePackage{pgfopts}          % biblatex dependency
+\RequirePackage[style=numeric, sorting=none, backend=biber]{biblatex} % biblatex
+
+% code listings
+\RequirePackage[outputdir=build]{minted} % use minted for code listing
+
+% utilities
+\RequirePackage{morewrites}
+
+%%%%% Style options for packages %%%%%
+% table column formatting types and vertical separation factor
+\newcolumntype{P}[1]{>{\centering\arraybackslash}p{#1}}
+\newcolumntype{D}[1]{>{\arraybackslash}p{#1}}
+\renewcommand{\arraystretch}{1.2}
+\setlength\LTleft{0pt} % for longtable
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue,
+  filecolor=blue,
+  urlcolor=blue,
+}
+
+% formatting quotes
+\RequirePackage[indentfirst=false,font+=small,leftmargin=0.4in,rightmargin=0pt,vskip=0pt] {quoting}
+
+% formatting figure and table captions
+\captionsetup*{labelsep=quad}
+
+% equation numbering
+\renewcommand{\theequation}{\arabic{section}.\arabic{equation}}
+\numberwithin{equation}{section}
+
+% distance of separation between columns
+\setlength{\columnsep}{1cm}
+
+% aligns text with lettrine package
+\setlength{\DefaultNindent}{0pt}
+
+
+% more TikZ stuff
+\usetikzlibrary{circuits,shapes, arrows, positioning, arrows.meta, matrix, decorations.pathreplacing, shadings}
+
+\tikzstyle{block} = [draw, rectangle, minimum height=3em, minimum width=6em]
+
+\tikzstyle{sum} = [draw, circle, node distance=1cm]
+\tikzstyle{input} = [coordinate]
+\tikzstyle{output} = [coordinate]
+\tikzstyle{pinstyle} = [pin edge={to-, thin,black}]
+\tikzumlset{font=\footnotesize\ttfamily}
+
+%%%%% General formatting additions %%%%%
+% \newcommand{\qed}{\hfill\blacksquare}           % QED square
+\renewcommand{\d}{\mathrm{d}}                     % differential d not itallic
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}  % quick norm operator
+
+\makeatletter
+% Label access to \thetitle and \thedate
+% \renewcommand{\title}[1]{\gdef\@thetitle{#1}}
+% \renewcommand{\date}[1]{\gdef\@thedate{#1}}
+\let\thetitle\@title%
+\let\thedate\@date%
+% Create new big operator symbol by copying "sum" 's logic
+\DeclareRobustCommand\bigop[1]{%
+  \mathop{\vphantom{\sum}\mathpalette\bigop@{#1}}\slimits@
+}
+\newcommand{\bigop@}[2]{%
+  \vcenter{%
+    \sbox\z@{$#1\sum$}%
+    \hbox{\resizebox{\ifx#1\displaystyle.9\fi\dimexpr\ht\z@+\dp\z@}{!}{$\m@th#2$}}%
+  }%
+}
+\makeatother
+
+\newcommand{\bigA}{\DOTSB\bigop{\mathrm{A}}}      % Assembly operator
+
+\renewcommand{\thefootnote}{\arabic{footnote}}    % arabic num for footnotes
+
+\newcommand{\compresslist}{ % Define a command to reduce spacing within itemize/enumerate environments, this is used right after \begin{itemize} or \begin{enumerate}
+  \setlength{\itemsep}{1pt}
+  \setlength{\parskip}{0pt}
+  \setlength{\parsep}{0pt}
+}
+
+
+\definecolor{DukeNavy}{HTML}{012169}
+\definecolor{DukeRoyal}{RGB}{0,83,155}
+\definecolor{backcolor}{rgb}{0.99,0.99,0.96} % code background color
+\definecolor{mygreen}{RGB}{28,172,0} % color values Red, Green, Blue
+\definecolor{mylilas}{RGB}{170,55,241}
+\definecolor{Gainsboro}{rgb}{0.86, 0.86, 0.86}
+\definecolor{Lavender}{rgb}{0.9, 0.9, 0.98}
+
+\colorlet{Theoremcolor}{Gainsboro!50!Lavender}
+\colorlet{Examplecolor}{green!10}
+\colorlet{Notecolor}{blue!10}
+\colorlet{Exercisecolor}{orange!10}
+
+% minted settings
+\setminted{
+  bgcolor=backcolor, fontfamily=tt, linenos=true, numberblanklines=true,
+  samepage=false, % do not force the list to appear on the same page
+  breaklines=true, numbersep=3pt, fontsize=\small, resetmargins=true,
+  framesep=0mm, breakafter=.
+}
+\setmintedinline{
+  bgcolor=backcolor, fontfamily=tt, linenos=false, numberblanklines=false,
+  samepage=false, % do not force the list to appear on the same page
+  breaklines=true, fontsize=\small
+}
+
+\newlength{\lblThrmWidth}
+\setlength{\lblThrmWidth}{\widthof{\textbf{Theorem~}}}
+\addtolength{\lblThrmWidth}{1mm}
+\newlength{\lblExWidth}
+\setlength{\lblExWidth}{\widthof{\textbf{Example~}}}
+\addtolength{\lblExWidth}{1mm}
+\newlength{\lblNoteWidth}
+\setlength{\lblNoteWidth}{\widthof{\textbf{Note~}}}
+\addtolength{\lblNoteWidth}{1mm}
+\newlength{\lblExercWidth}
+\setlength{\lblExercWidth}{\widthof{\textbf{Exercise~}}}
+\addtolength{\lblExercWidth}{1mm}
+
+\tcbset{%
+  cboxes/.style={%
+      enhanced, breakable, sharp corners,
+      fonttitle=\bfseries, description font=\mdseries\itshape,
+      colback=#1color, colbacktitle=#1color,
+      titlerule=1mm, titlerule style=#1color,
+      boxrule=0pt, coltitle=black, frame hidden,
+      toptitle=2mm, lefttitle=2mm,
+      boxsep=1mm, top=0mm,
+      description delimiters parenthesis,
+      terminator sign none,
+    }
+}
+
+\newtcbtheorem[auto counter, number within=section]{theorem}{Theorem}{ cboxes=Theorem,fontupper=\itshape, leftupper=\lblThrmWidth, before lower=\textit{Proof}:~}{thm}
+
+\newtcbtheorem[auto counter, number within=section]{example}{Example}{ cboxes=Example, leftupper=\lblExWidth}{ex}
+
+\newtcbtheorem[auto counter, number within=section]{note}{Note}{ cboxes=Note, leftupper=\lblNoteWidth}{def}
+
+\newtcbtheorem[auto counter, number within=section]{exercise}{Exercise}{ cboxes=Exercise, leftupper=\lblExercWidth}{exec}
+
+\newcommand{\dukelogo}[1]{\includestandalone[height=#1]{../images/DukeUniversityCrest}}

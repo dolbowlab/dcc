@@ -1,0 +1,25 @@
+\documentclass[class=Report, crop=false]{standalone}
+\makeatletter
+\let\thetitle\@title
+\makeatother
+\begin{document}
+\begin{titlepage}
+    \centering
+      \vspace*{0.5 cm}
+      \includestandalone[height=2.5in]{../images/DukeUniversityCrest}\\[1.0 cm]	% University Logo
+    \rule{\linewidth}{0.2 mm} \\[0.4 cm]
+    { \Huge \bfseries \thetitle }\\
+    \rule{\linewidth}{0.2 mm} \\[1cm]
+    \textsc{\Large \institute}\\[0.3 cm]	% University Name
+    \textsc{\large\thedate}\\[1.0cm]
+    \versionNumber \\[1.0cm]
+
+  \vspace{0.5in}
+  \noindent \centering \begin{tabular}{c}
+  \makebox[2.5in]{\hrulefill}\\
+  \parbox{2.5in}{\centering \Large {Casper Versteeg\\Gary Hu\\Roozbeh Rezakhani}}\\[0.1cm]
+  \end{tabular}
+  \vspace{1in}
+\end{titlepage}
+
+\end{document}

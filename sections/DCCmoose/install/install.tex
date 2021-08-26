@@ -1,0 +1,73 @@
+\documentclass[class=Report, crop=false]{standalone}
+
+\begin{document}
+\section{Installing}
+
+\subsection{Preliminary setup}
+Upon logging in to DCC (using \mintinline{bash}{ssh <net_id>@dcc-slogin.oit.duke.edu}) you'll need to load the modules required to compile PETSc, LibMesh and MOOSE. You can find what modules are available to you (as installed by DCC admins, ready for you to use), with \mintinline{bash}{module avail}.
+
+\begin{note}{purging}{notepurge}
+  This may not be necessary, but you might also want to run \mintinline{bash}{module purge} to unload any modules that may be loaded by default. To view the currently loaded modules, run \mintinline{bash}{module list}, and you should see the output \mintinline{bash}{No Modulefiles Currently Loaded.}.
+\end{note}
+
+Next, you will have to load the following modules:
+
+\begin{minted}{bash}
+  module load cmake/3.10.2
+  module load Python/3.6.4
+  module load GCC/7.4.0
+  module load MPICH/3.2.1
+\end{minted}
+
+\subsection{Installing MOOSE}
+From here on, you can follow the HPC install instructions\footnote{\url{https://mooseframework.org/getting_started/installation/hpc_install_moose.html}} on the MOOSE website. The section ``PREFIX Setup'' is only required for installation, so you will not need to add any of those variables to your \mintinline{bash}{.bashrc}. You should be able to \mintinline{text}{copy + paste} the code in the ``PETSc'' section without any issues.
+
+\begin{note}{complete~instructions}{complnote}
+  You may also find a complete set of instructions in Appendix \ref{sec:complinstr}, to eliminate any ambiguity.
+\end{note}
+
+You can create a MOOSE profile per the instructions (by creating a \mintinline{bash}{.moose_profile}), however you can also simply add those lines to your \mintinline{bash}{.bashrc} to avoid creating a new profile. By adding them to your \mintinline{bash}{.bashrc} your session will be configured to use MOOSE every time you log in to DCC. This is really a matter of preference---there should not be any issues one way or another.
+
+\begin{note}{automatically loading the MOOSE environment on login}
+  If you choose to maintain a \mintinline{bash}{.moose_profile} per the instructions, you should add the following lines to your \mintinline{bash}{.moose_profile} so that the modules required by the MOOSE environment are also loaded:
+
+  \begin{minted}{bash}
+    module load cmake/3.10.2
+    module load Python/3.6.4
+    module load GCC/7.4.0
+    module load MPICH/3.2.1
+  \end{minted}
+
+  you can then add the following lines to your \mintinline{bash}{.bashrc} so that the MOOSE profile (and the corresponding modules) are automatically sourced:
+
+  \begin{minted}{bash}
+    # moose environment
+    if type "module" &> /dev/null; then
+      source $HOME/.moose_profile
+    fi
+  \end{minted}
+\end{note}
+
+\subsection{Installing Raccoon}
+If you will be using Gary Hu's Raccoon app\footnote{\url{https://hugary1995.github.io/raccoon/install/index.html}}, you may stop following the HPC install instructions at the "Obtaining and Building MOOSE" section, since Raccoon includes MOOSE as a submodule. To get Raccoon set up, just do the usual \mintinline{bash}{git} dance:
+
+\begin{minted}{bash}
+  mkdir ~/projects && cd ~/projects
+  git clone https://github.com/hugary1995/raccoon.git
+  cd raccoon
+  git checkout master
+  git submodule --init
+\end{minted}
+
+\noindent Since we did not install MOOSE using Conda like you would on your local machine, section 3 ``Compile libMesh (Optional)'' is---in fact---\textit{not optional}.
+
+\begin{note}{compiling LibMesh}{libmeshnote}
+  When compiling LibMesh, you may be hindered by the limited memory available on the DCC login node. As a means of mitigating this issue, you can specify the compile method as follows:
+  \begin{minted}{bash}
+    METHOD=opt ./update_and_rebuild_libmesh.sh --with-boost
+  \end{minted}
+\end{note}
+
+\noindent After compliling LibMesh, you should be able to compile Raccoon, and run tests, without any issues.
+
+\end{document}
